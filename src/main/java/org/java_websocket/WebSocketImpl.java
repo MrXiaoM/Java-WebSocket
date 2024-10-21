@@ -224,6 +224,10 @@ public class WebSocketImpl implements WebSocket {
               (socketBuffer.remaining() > 1000 ? "too big to display"
                       : new String(socketBuffer.array(), socketBuffer.position(), socketBuffer.remaining())));
     }
+    WebSocketListener listener = getWebSocketListener();
+    if (listener instanceof IDecodeInjector) {
+      if (((IDecodeInjector) listener).inject(this, socketBuffer)) return;
+    }
     if (readyState != ReadyState.NOT_YET_CONNECTED) {
       if (readyState == ReadyState.OPEN) {
         decodeFrames(socketBuffer);
