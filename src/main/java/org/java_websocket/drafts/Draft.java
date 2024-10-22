@@ -67,6 +67,8 @@ public abstract class Draft {
 
   protected Opcode continuousFrameType = null;
 
+  private String charset = "UTF8";
+
   public static ByteBuffer readLine(ByteBuffer buf) {
     ByteBuffer sbuf = ByteBuffer.allocate(buf.remaining());
     byte prev;
@@ -346,6 +348,24 @@ public abstract class Draft {
 
   public Role getRole() {
     return role;
+  }
+
+  /**
+   * Getter method for property <tt>charset</tt>.
+   *
+   * @return property value of charset
+   */
+  public String getCharset() {
+    return charset;
+  }
+
+  /**
+   * Setter method for property <tt>charset</tt>.
+   *
+   * @param charset value to be assigned to property charset
+   */
+  public void setCharset(String charset) {
+    this.charset = charset;
   }
 
   public String toString() {

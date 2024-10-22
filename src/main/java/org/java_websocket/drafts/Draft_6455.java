@@ -461,7 +461,9 @@ public class Draft_6455 extends Draft {
     for (IProtocol knownProtocol : getKnownProtocols()) {
       newProtocols.add(knownProtocol.copyInstance());
     }
-    return new Draft_6455(newExtensions, newProtocols, maxFrameSize);
+    Draft_6455 draft = new Draft_6455(newExtensions, newProtocols, maxFrameSize);
+    draft.setCharset(getCharset());
+    return draft;
   }
 
   @Override
@@ -790,7 +792,7 @@ public class Draft_6455 extends Draft {
   @Override
   public List<Framedata> createFrames(String text, boolean mask) {
     TextFrame curframe = new TextFrame();
-    curframe.setPayload(ByteBuffer.wrap(Charsetfunctions.utf8Bytes(text)));
+    curframe.setPayload(ByteBuffer.wrap(Charsetfunctions.charsetBytes(text, getCharset())));
     curframe.setTransferemasked(mask);
     try {
       curframe.isValid();
@@ -983,7 +985,7 @@ public class Draft_6455 extends Draft {
       throws InvalidDataException {
     try {
       webSocketImpl.getWebSocketListener()
-          .onWebsocketMessage(webSocketImpl, Charsetfunctions.stringUtf8(frame.getPayloadData()));
+          .onWebsocketMessage(webSocketImpl, Charsetfunctions.stringCharset(frame.getPayloadData(), getCharset()));
     } catch (RuntimeException e) {
       logRuntimeException(webSocketImpl, e);
     }
@@ -1010,7 +1012,7 @@ public class Draft_6455 extends Draft {
       ((FramedataImpl1) currentContinuousFrame).isValid();
       try {
         webSocketImpl.getWebSocketListener().onWebsocketMessage(webSocketImpl,
-            Charsetfunctions.stringUtf8(currentContinuousFrame.getPayloadData()));
+            Charsetfunctions.stringCharset(currentContinuousFrame.getPayloadData(), getCharset()));
       } catch (RuntimeException e) {
         logRuntimeException(webSocketImpl, e);
       }

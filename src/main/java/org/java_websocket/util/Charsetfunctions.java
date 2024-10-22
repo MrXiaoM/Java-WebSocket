@@ -25,11 +25,10 @@
 
 package org.java_websocket.util;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.*;
+
 import org.java_websocket.exceptions.InvalidDataException;
 import org.java_websocket.framing.CloseFrame;
 
@@ -48,6 +47,14 @@ public class Charsetfunctions {
    */
   public static byte[] utf8Bytes(String s) {
     return s.getBytes(StandardCharsets.UTF_8);
+  }
+
+  public static byte[] charsetBytes(String s, String charset) {
+    try {
+      return s.getBytes(charset);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /*
@@ -71,6 +78,25 @@ public class Charsetfunctions {
 
   public static String stringUtf8(ByteBuffer bytes) throws InvalidDataException {
     CharsetDecoder decode = StandardCharsets.UTF_8.newDecoder();
+    decode.onMalformedInput(codingErrorAction);
+    decode.onUnmappableCharacter(codingErrorAction);
+    String s;
+    try {
+      bytes.mark();
+      s = decode.decode(bytes).toString();
+      bytes.reset();
+    } catch (CharacterCodingException e) {
+      throw new InvalidDataException(CloseFrame.NO_UTF8, e);
+    }
+    return s;
+  }
+
+  public static String stringCharset(byte[] bytes, String charset) throws InvalidDataException {
+    return stringCharset(ByteBuffer.wrap(bytes), charset);
+  }
+
+  public static String stringCharset(ByteBuffer bytes, String charset) throws InvalidDataException {
+    CharsetDecoder decode = Charset.forName(charset).newDecoder();
     decode.onMalformedInput(codingErrorAction);
     decode.onUnmappableCharacter(codingErrorAction);
     String s;

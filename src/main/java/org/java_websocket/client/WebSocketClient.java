@@ -148,6 +148,8 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
    */
   private DnsResolver dnsResolver = null;
 
+  private static final String defaultCharset = "UTF-8";
+
   /**
    * Constructs a WebSocketClient instance and sets it to the connect to the specified URI. The
    * channel does not attampt to connect automatically. The connection will be established once you
@@ -156,7 +158,20 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
    * @param serverUri the server URI to connect to
    */
   public WebSocketClient(URI serverUri) {
-    this(serverUri, new Draft_6455());
+    this(serverUri, new Draft_6455(), defaultCharset);
+  }
+
+  /**
+   * Constructs a WebSocketClient instance and sets it to the connect to the specified URI. The
+   * channel does not attampt to connect automatically. The connection will be established once you
+   * call <var>connect</var>.
+   *
+   * @param serverUri the server URI to connect to
+   * @param charset        Charset of messages
+   * @since 1.5.8
+   */
+  public WebSocketClient(URI serverUri, String charset) {
+    this(serverUri, new Draft_6455(), charset);
   }
 
   /**
@@ -168,7 +183,21 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
    * @param protocolDraft The draft which should be used for this connection
    */
   public WebSocketClient(URI serverUri, Draft protocolDraft) {
-    this(serverUri, protocolDraft, null, 0);
+    this(serverUri, protocolDraft, defaultCharset);
+  }
+
+  /**
+   * Constructs a WebSocketClient instance and sets it to the connect to the specified URI. The
+   * channel does not attampt to connect automatically. The connection will be established once you
+   * call <var>connect</var>.
+   *
+   * @param serverUri     the server URI to connect to
+   * @param protocolDraft The draft which should be used for this connection
+   * @param charset        Charset of messages
+   * @since 1.5.8
+   */
+  public WebSocketClient(URI serverUri, Draft protocolDraft, String charset) {
+    this(serverUri, protocolDraft, null, charset, 0);
   }
 
   /**
@@ -181,7 +210,48 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
    * @since 1.3.8
    */
   public WebSocketClient(URI serverUri, Map<String, String> httpHeaders) {
-    this(serverUri, new Draft_6455(), httpHeaders);
+    this(serverUri, httpHeaders, defaultCharset);
+  }
+  /**
+   * Constructs a WebSocketClient instance and sets it to the connect to the specified URI. The
+   * channel does not attampt to connect automatically. The connection will be established once you
+   * call <var>connect</var>.
+   *
+   * @param serverUri   the server URI to connect to
+   * @param httpHeaders Additional HTTP-Headers
+   * @param charset        Charset of messages
+   * @since 1.5.8
+   */
+  public WebSocketClient(URI serverUri, Map<String, String> httpHeaders, String charset) {
+    this(serverUri, new Draft_6455(), httpHeaders, charset);
+  }
+
+  /**
+   * Constructs a WebSocketClient instance and sets it to the connect to the specified URI. The
+   * channel does not attampt to connect automatically. The connection will be established once you
+   * call <var>connect</var>.
+   *
+   * @param serverUri   the server URI to connect to
+   * @param httpHeaders Additional HTTP-Headers
+   * @since 1.3.8
+   */
+  public WebSocketClient(URI serverUri, Draft protocolDraft, Map<String, String> httpHeaders) {
+    this(serverUri, protocolDraft, httpHeaders, defaultCharset);
+  }
+
+  /**
+   * Constructs a WebSocketClient instance and sets it to the connect to the specified URI. The
+   * channel does not attampt to connect automatically. The connection will be established once you
+   * call <var>connect</var>.
+   *
+   * @param serverUri     the server URI to connect to
+   * @param protocolDraft The draft which should be used for this connection
+   * @param httpHeaders   Additional HTTP-Headers
+   * @param charset        Charset of messages
+   * @since 1.5.8
+   */
+  public WebSocketClient(URI serverUri, Draft protocolDraft, Map<String, String> httpHeaders, String charset) {
+    this(serverUri, protocolDraft, httpHeaders, charset, 0);
   }
 
   /**
@@ -194,10 +264,9 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
    * @param httpHeaders   Additional HTTP-Headers
    * @since 1.3.8
    */
-  public WebSocketClient(URI serverUri, Draft protocolDraft, Map<String, String> httpHeaders) {
-    this(serverUri, protocolDraft, httpHeaders, 0);
+  public WebSocketClient(URI serverUri, Draft protocolDraft, Map<String, String> httpHeaders, int connectTimeout) {
+    this(serverUri, protocolDraft, httpHeaders, defaultCharset, connectTimeout);
   }
-
   /**
    * Constructs a WebSocketClient instance and sets it to the connect to the specified URI. The
    * channel does not attampt to connect automatically. The connection will be established once you
@@ -206,16 +275,18 @@ public abstract class WebSocketClient extends AbstractWebSocket implements Runna
    * @param serverUri      the server URI to connect to
    * @param protocolDraft  The draft which should be used for this connection
    * @param httpHeaders    Additional HTTP-Headers
+   * @param charset        Charset of messages
    * @param connectTimeout The Timeout for the connection
    */
   public WebSocketClient(URI serverUri, Draft protocolDraft, Map<String, String> httpHeaders,
-      int connectTimeout) {
+                         String charset, int connectTimeout) {
     if (serverUri == null) {
       throw new IllegalArgumentException();
     } else if (protocolDraft == null) {
       throw new IllegalArgumentException("null as draft is permitted for `WebSocketServer` only!");
     }
     this.uri = serverUri;
+    protocolDraft.setCharset(charset);
     this.draft = protocolDraft;
     this.dnsResolver = new DnsResolver() {
       @Override
