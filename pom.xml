@@ -2,13 +2,13 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.java-websocket</groupId>
+    <groupId>top.mrxiaom</groupId>
     <artifactId>Java-WebSocket</artifactId>
     <packaging>jar</packaging>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.8</version>
     <name>Java-WebSocket</name>
     <description>A barebones WebSocket client and server implementation written 100% in Java</description>
-    <url>https://github.com/TooTallNate/Java-WebSocket</url>
+    <url>https://github.com/MrXiaoM/Java-WebSocket</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>2.0.13</slf4j.version>
@@ -33,14 +33,14 @@
     <licenses>
         <license>
             <name>MIT License</name>
-            <url>https://github.com/TooTallNate/Java-WebSocket/blob/master/LICENSE</url>
+            <url>https://github.com/MrXiaoM/Java-WebSocket/blob/master/LICENSE</url>
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/TooTallNate/Java-WebSocket</url>
+        <url>https://github.com/MrXiaoM/Java-WebSocket</url>
     </scm>
     <issueManagement>
-        <url>https://github.com/TooTallNate/Java-WebSocket/issues</url>
+        <url>https://github.com/MrXiaoM/Java-WebSocket/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
     <dependencyManagement>

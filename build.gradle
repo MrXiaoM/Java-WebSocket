@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'idea'
+
     id 'maven-publish'
 }
 
@@ -9,17 +9,22 @@ repositories {
     mavenCentral()
 }
 
-group = 'org.java-websocket'
-version = '1.6.0-SNAPSHOT'
+group = 'top.mrxiaom'
+version = '1.5.8'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 compileJava {
     options.compilerArgs += ['-encoding', 'UTF-8']
 }
 
 javadoc {
     options.encoding = 'UTF-8'
+    options.addBooleanOption("keywords", true)
+    options.addBooleanOption("Xdoclint:none", true)
 }
 
 publishing {
@@ -30,6 +35,28 @@ publishing {
             version = project.version
 
             from components.java
+            pom {
+                name = artifactId
+                description = "A barebones WebSocket client and server implementation written in 100% Java."
+                url = "https://github.com/MrXiaoM/Java-WebSocket"
+                licenses {
+                    license {
+                        name = "MIT License"
+                        url = "https://github.com/MrXiaoM/Java-WebSocket/blob/master/LICENSE"
+                    }
+                }
+                developers {
+                    developer {
+                        name = "MrXiaoM"
+                        email = "mrxiaom@qq.com"
+                    }
+                }
+                scm {
+                    url = "https://github.com/MrXiaoM/Java-WebSocket"
+                    connection = "scm:git:https://github.com/MrXiaoM/Java-WebSocket.git"
+                    developerConnection = "scm:git:https://github.com/MrXiaoM/Java-WebSocket.git"
+                }
+            }
         }
     }
 }
